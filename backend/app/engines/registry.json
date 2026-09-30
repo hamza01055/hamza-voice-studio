@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-01",
+  "models": [
+    {
+      "id": "kokoro-multi-lang-v1_0",
+      "name": "Kokoro 82M v1.0 (multi-language)",
+      "kind": "tts",
+      "adapter": "kokoro_sherpa",
+      "integration": "integrated",
+      "verification": "verified_real_inference",
+      "runtime": "sherpa-onnx==1.13.8 (CPU, ONNX Runtime)",
+      "upstream": {
+        "repository": "https://huggingface.co/hexgrad/Kokoro-82M",
+        "model_id": "hexgrad/Kokoro-82M",
+        "version": "v1.0 (released 2025-01-27)"
+      },
+      "artifacts": [
+        {
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2",
+          "type": "tar.bz2",
+          "size_bytes": 349906910,
+          "sha256": "c5f7e2d2caf082bc1d20fb70334a61d99d20b484500aad32e7cf84c128ea3298",
+          "strip_prefix": "kokoro-multi-lang-v1_0/"
+        }
+      ],
+      "revision": "sherpa-onnx release tag tts-models / kokoro-multi-lang-v1_0.tar.bz2 sha256:c5f7e2d2caf0",
+      "installed_size_bytes": 402653184,
+      "required_files": ["model.onnx", "voices.bin", "tokens.txt", "espeak-ng-data"],
+      "license": {
+        "code": "sherpa-onnx: Apache-2.0",
+        "weights": "Apache-2.0 (Kokoro-82M; LICENSE file shipped in the archive)",
+        "third_party": "espeak-ng-data (phoneme data used by the bundled espeak-ng library): GPL-3.0-or-later. See THIRD_PARTY_NOTICES.md.",
+        "gated_terms": "none",
+        "commercial_use": "permitted_with_notice",
+        "commercial_note": "Weights are Apache-2.0. The G2P fallback uses eSpeak-NG (GPL-3.0) which sherpa-onnx links; get legal review before closed-source commercial distribution."
+      },
+      "languages": {
+        "verified": ["en-us", "en-gb"],
+        "experimental": ["es", "fr", "hi", "it", "pt-br", "zh"],
+        "unevaluated_hidden": ["ur"],
+        "notes": "Verified = automated signal checks + spectrogram inspection in development; no native-speaker listening review yet. Urdu has no Kokoro voice (eSpeak Urdu + Hindi voice, unevaluated)."
+      },
+      "reference_audio": "not supported (no voice cloning)",
+      "devices": ["cpu"],
+      "precision": "fp32 ONNX"
+    },
+    {
+      "id": "whisper-tiny-sherpa",
+      "name": "Whisper tiny (multilingual, int8)",
+      "kind": "asr",
+      "adapter": "whisper_sherpa",
+      "integration": "integrated",
+      "verification": "unverified_not_downloaded",
+      "runtime": "sherpa-onnx==1.13.8 (CPU)",
+      "upstream": {
+        "repository": "https://github.com/openai/whisper",
+        "model_id": "openai/whisper-tiny",
+        "version": "tiny (ONNX export by k2-fsa)"
+      },
+      "artifacts": [
+        {
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-tiny.tar.bz2",
+          "type": "tar.bz2",
+          "size_bytes": 116204861,
+          "sha256": null,
+          "strip_prefix": "sherpa-onnx-whisper-tiny/"
+        }
+      ],
+      "revision": "sherpa-onnx release tag asr-models / sherpa-onnx-whisper-tiny.tar.bz2 (checksum recorded on first install)",
+      "installed_size_bytes": 160000000,
+      "required_globs": ["*encoder.int8.onnx", "*decoder.int8.onnx", "*tokens.txt"],
+      "license": {
+        "code": "sherpa-onnx: Apache-2.0; openai/whisper: MIT",
+        "weights": "MIT (OpenAI Whisper)",
+        "third_party": "",
+        "gated_terms": "none",
+        "commercial_use": "permitted",
+        "commercial_note": ""
+      },
+      "languages": {
+        "verified": [],
+        "experimental": ["en", "ur", "hi", "ar", "es", "fr", "de", "it", "pt", "zh", "ja"],
+        "notes": "Not downloaded in development; accuracy unmeasured. Tiny is weak for Urdu."
+      },
+      "devices": ["cpu"],
+      "precision": "int8 ONNX"
+    },
+    {
+      "id": "whisper-base-sherpa",
+      "name": "Whisper base (multilingual, int8)",
+      "kind": "asr",
+      "adapter": "whisper_sherpa",
+      "integration": "integrated",
+      "verification": "unverified_not_downloaded",
+      "runtime": "sherpa-onnx==1.13.8 (CPU)",
+      "upstream": {
+        "repository": "https://github.com/openai/whisper",
+        "model_id": "openai/whisper-base",
+        "version": "base (ONNX export by k2-fsa)"
+      },
+      "artifacts": [
+        {
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-base.tar.bz2",
+          "type": "tar.bz2",
+          "size_bytes": 207557382,
+          "sha256": null,
+          "strip_prefix": "sherpa-onnx-whisper-base/"
+        }
+      ],
+      "revision": "sherpa-onnx release tag asr-models / sherpa-onnx-whisper-base.tar.bz2 (checksum recorded on first install)",
+      "installed_size_bytes": 290000000,
+      "required_globs": ["*encoder.int8.onnx", "*decoder.int8.onnx", "*tokens.txt"],
+      "license": {
+        "code": "sherpa-onnx: Apache-2.0; openai/whisper: MIT",
+        "weights": "MIT (OpenAI Whisper)",
+        "third_party": "",
+        "gated_terms": "none",
+        "commercial_use": "permitted",
+        "commercial_note": ""
+      },
+      "languages": {
+        "verified": [],
+        "experimental": ["en", "ur", "hi", "ar", "es", "fr", "de", "it", "pt", "zh", "ja"],
+        "notes": "Not downloaded in development; accuracy unmeasured."
+      },
+      "devices": ["cpu"],
+      "precision": "int8 ONNX"
+    },
+    {
+      "id": "zipvoice-distill-zh-en",
+      "name": "ZipVoice-Distill (zero-shot voice cloning, zh/en)",
+      "kind": "tts",
+      "adapter": null,
+      "integration": "evaluated_not_integrated",
+      "verification": "not_tested",
+      "upstream": {
+        "repository": "https://github.com/k2-fsa/ZipVoice",
+        "model_id": "k2-fsa/ZipVoice (zipvoice_distill)",
+        "version": "sherpa-onnx export sherpa-onnx-zipvoice-distill-zh-en-emilia"
+      },
+      "artifacts": [
+        {
+          "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-zipvoice-distill-zh-en-emilia.tar.bz2",
+          "type": "tar.bz2",
+          "size_bytes": 634815977,
+          "sha256": null
+        }
+      ],
+      "license": {
+        "code": "Apache-2.0",
+        "weights": "Unclear: repository is Apache-2.0 but the checkpoint is trained on Emilia (CC-BY-NC-4.0).",
+        "gated_terms": "none",
+        "commercial_use": "research_only_until_clarified",
+        "commercial_note": "Treat as research-only. Download was not approved in development."
+      },
+      "languages": {"verified": [], "experimental": ["en", "zh"]},
+      "reference_audio": "required, with exact transcript"
+    },
+    {
+      "id": "chatterbox",
+      "name": "Chatterbox (Resemble AI)",
+      "kind": "tts",
+      "adapter": null,
+      "integration": "evaluated_not_integrated",
+      "verification": "not_tested",
+      "upstream": {
+        "repository": "https://github.com/resemble-ai/chatterbox",
+        "model_id": "ResembleAI/chatterbox",
+        "version": "not pinned"
+      },
+      "artifacts": [],
+      "license": {
+        "code": "MIT",
+        "weights": "MIT (per model card)",
+        "gated_terms": "Outputs carry Resemble AI's Perth neural watermark.",
+        "commercial_use": "permitted",
+        "commercial_note": "Best candidate for commercial voice cloning. Requires PyTorch and Hugging Face downloads (both blocked in development); needs its own worker environment."
+      },
+      "languages": {"verified": [], "experimental": []},
+      "reference_audio": "required (~10 s), transcript not required"
+    },
+    {
+      "id": "omnivoice",
+      "name": "OmniVoice (k2-fsa)",
+      "kind": "tts",
+      "adapter": null,
+      "integration": "rejected_for_commercial",
+      "verification": "not_tested",
+      "upstream": {
+        "repository": "https://huggingface.co/k2-fsa/OmniVoice",
+        "model_id": "k2-fsa/OmniVoice",
+        "version": "not pinned"
+      },
+      "artifacts": [],
+      "license": {
+        "code": "Apache-2.0",
+        "weights": "CC-BY-NC (per model card, due to Emilia training data)",
+        "gated_terms": "none",
+        "commercial_use": "prohibited",
+        "commercial_note": "Noncommercial weights. Not integrated."
+      },
+      "languages": {"verified": [], "experimental": []}
+    }
+  ]
+}

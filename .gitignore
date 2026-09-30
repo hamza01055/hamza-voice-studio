@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Node
+node_modules/
+frontend/dist/
+desktop/dist/
+desktop/out/
+test-results/
+playwright-report/
+# Runtime data - never commit
+*.db
+*.db-wal
+*.db-shm
+*.wav
+*.mp3
+*.flac
+*.onnx
+*.bin
+*.tar.bz2
+models/
+media/
+exports/
+.env
+*.log
+!backend/tests/**/fixtures/*.wav
