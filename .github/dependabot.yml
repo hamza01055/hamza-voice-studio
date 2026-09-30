@@ -1,0 +1,34 @@
+version: 2
+# Monthly, one grouped PR per ecosystem to keep the noise down.
+updates:
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: monthly
+    groups:
+      backend:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: monthly
+    groups:
+      frontend:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /desktop
+    schedule:
+      interval: monthly
+    groups:
+      desktop:
+        patterns: ["*"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]

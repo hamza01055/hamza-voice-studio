@@ -28,3 +28,6 @@ exports/
 .env
 *.log
 !backend/tests/**/fixtures/*.wav
+# Editor / build caches
+.vscode/
+*.tsbuildinfo
