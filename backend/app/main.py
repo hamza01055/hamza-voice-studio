@@ -41,6 +41,9 @@ def startup_tasks() -> None:
     models_service.cleanup_partials()
     with session_factory()() as db:
         recovered = queue.recover_stale(db, force_all_running=True)
+        detected = models_service.sync_installations(db)
+        if detected:
+            log.info("Detected installed model(s) on disk: %s", ", ".join(detected))
         # Installation rows left mid-download by a crash
         from app.db.models import ModelInstallation
 

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
 from app.branding import APP_NAME, APP_VERSION
+from app.core.config import get_settings
 from app.db.session import get_db
 from app.schemas import api as S
 from app.services import hardware, models_service, settings_service
@@ -27,6 +28,8 @@ def health(request: Request) -> dict[str, Any]:
 def system_capabilities(db: Session = Depends(get_db)) -> dict[str, Any]:
     caps = hardware.capabilities()
     caps["installed_models"] = models_service.installed_models(db)
+    # Shown only to the local user so they know what to back up.
+    caps["data_dir"] = str(get_settings().data_dir)
     caps["network_use"] = ("Network is used only when you start a model download from the Models page. "
                            "Generation, transcription and export run locally.")
     return caps

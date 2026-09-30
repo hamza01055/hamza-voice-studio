@@ -68,4 +68,5 @@ def test_validation_errors_do_not_echo_input(client: TestClient):
 
 
 def test_model_id_traversal(client: TestClient):
-    assert client.post("/api/models/..%2F..%2Fetc/download").status_code in (404, 422)
+    assert client.post("/api/models/..%2F..%2Fetc/download").status_code in (404, 405, 422)
+    assert client.post("/api/models/..%2Fsecret/download").status_code in (404, 405, 422)

@@ -172,3 +172,33 @@ def test_not_integrated_model_cannot_install(client: TestClient):
     client.patch("/api/settings", json={"show_unevaluated_languages": True})
     kok = client.get("/api/models/kokoro-multi-lang-v1_0").json()
     assert "ur" in kok["capabilities"]["languages_experimental"]
+
+
+def test_detect_installed_model_from_disk_manifest(client: TestClient, fake_registry, settings):
+    """A model folder restored from backup is detected at startup."""
+    dl = client.post("/api/models/mock-tts/download").json()["download_id"]
+    run_worker("io")
+    assert client.get(f"/api/model-downloads/{dl}").json()["job"]["status"] == "completed"
+    from app.db.models import ModelInstallation
+    from app.db.session import session_factory
+    from app.main import startup_tasks
+
+    with session_factory()() as db:
+        db.delete(db.get(ModelInstallation, "mock-tts"))
+        db.commit()
+    assert client.get("/api/models/mock-tts").json()["status"] == "not_installed"
+    startup_tasks()
+    m = client.get("/api/models/mock-tts").json()
+    assert m["status"] == "installed" and m["integrity_status"] == "verified"
+    # tampered manifest (wrong checksum) is not trusted
+    with session_factory()() as db:
+        db.delete(db.get(ModelInstallation, "mock-tts"))
+        db.commit()
+    import json as _json
+
+    mf = registry.model_dir("mock-tts") / ".hvs-install.json"
+    data = _json.loads(mf.read_text())
+    data["sha256"] = {k: "0" * 64 for k in data["sha256"]}
+    mf.write_text(_json.dumps(data))
+    startup_tasks()
+    assert client.get("/api/models/mock-tts").json()["status"] == "not_installed"

@@ -24,6 +24,9 @@ from app.core.config import Settings, set_settings
 
 def port_free(host: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        if not sys.platform.startswith("win"):
+            # Match uvicorn: allow re-binding a port in TIME_WAIT after a restart.
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         try:
             s.bind((host, port))
             return True
@@ -43,6 +46,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Hamza Voice Studio local server")
     ap.add_argument("--port", type=int, default=int(os.environ.get("HVS_PORT", "8765")))
     ap.add_argument("--no-browser", action="store_true")
+    ap.add_argument("--strict-port", action="store_true", help="Fail if the port is busy instead of picking another")
     ap.add_argument("--print-json", action="store_true",
                     help="Print {port, token} as JSON on stdout (used by the desktop shell)")
     args = ap.parse_args()
@@ -52,6 +56,9 @@ def main() -> None:
         print("Refusing to bind to a non-loopback address; the local edition is single-user only.",
               file=sys.stderr)
         sys.exit(2)
+    if args.strict_port and not port_free(base.host, args.port):
+        print(f"Port {args.port} is already in use. Close the other program or choose --port.", file=sys.stderr)
+        sys.exit(3)
     port = pick_port(base.host, args.port)
     settings = base.model_copy(update={"port": port})
     set_settings(settings)
@@ -78,7 +85,10 @@ def main() -> None:
 
     from app.main import create_app
 
-    uvicorn.run(create_app(), host=settings.host, port=port, log_level="warning", access_log=False)
+    # SSE streams never end on their own; cap graceful shutdown so the app (and its
+    # worker) stop promptly instead of waiting for browser connections to close.
+    uvicorn.run(create_app(), host=settings.host, port=port, log_level="warning", access_log=False,
+                timeout_graceful_shutdown=3)
 
 
 if __name__ == "__main__":

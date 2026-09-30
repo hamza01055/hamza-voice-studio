@@ -151,6 +151,45 @@ def remove_installation(db: Session, model_id: str) -> None:
     db.flush()
 
 
+def sync_installations(db: Session) -> list[str]:
+    """Detect models already present on disk (e.g. after restoring a backup or when
+    HVS_MODELS_DIR points at an existing folder). A model counts as installed only if
+    its install manifest matches the registry revision and pinned checksums."""
+    found = []
+    for entry in registry.all_models():
+        if not entry.get("adapter"):
+            continue
+        d = registry.model_dir(entry["id"])
+        manifest = d / ".hvs-install.json"
+        inst = db.get(ModelInstallation, entry["id"])
+        if inst and inst.download_status == "installed":
+            continue
+        if not manifest.exists() or not registry.files_present(entry, d):
+            continue
+        try:
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if data.get("revision") != entry["revision"]:
+            continue
+        pinned = {a["url"].rsplit("/", 1)[-1]: a.get("sha256") for a in entry.get("artifacts", [])}
+        recorded = data.get("sha256", {})
+        if any(v and recorded.get(k) != v for k, v in pinned.items()):
+            continue
+        if not inst:
+            inst = ModelInstallation(model_id=entry["id"], revision=entry["revision"],
+                                     source=entry["artifacts"][0]["url"])
+            db.add(inst)
+        inst.download_status = "installed"
+        inst.integrity_status = "verified" if all(pinned.values()) else "recorded_unpinned"
+        inst.install_location = entry["id"]
+        inst.license_record = entry.get("license", {})
+        inst.installed_at = utcnow()
+        found.append(entry["id"])
+    db.flush()
+    return found
+
+
 def cleanup_partials() -> None:
     """Remove staging/trash leftovers from interrupted installs (partial downloads are
     kept for resumption)."""

@@ -29,7 +29,7 @@ def default_data_dir() -> Path:
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="HVS_", env_file=None, extra="ignore")
+    model_config = SettingsConfigDict(env_prefix="HVS_", env_file=None, extra="ignore", populate_by_name=True)
 
     data_dir: Path = Field(default_factory=default_data_dir)
     host: str = "127.0.0.1"
@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     start_worker: bool = True
     # Serve the built frontend from this directory if present.
     frontend_dist: Path | None = None
+    # Optional separate location for model files (e.g. a larger drive, or shared
+    # between data directories). Defaults to <data_dir>/models.
+    models_dir_override: Path | None = Field(default=None, alias="HVS_MODELS_DIR")
 
     # Limits
     max_upload_bytes: int = 50 * 1024 * 1024
@@ -70,7 +73,7 @@ class Settings(BaseSettings):
 
     @property
     def models_dir(self) -> Path:
-        return self.data_dir / "models"
+        return self.models_dir_override or (self.data_dir / "models")
 
     @property
     def media_dir(self) -> Path:

@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --panel-2: #f1f3f6;
+  --border: #e2e5ea;
+  --text: #15181d;
+  --muted: #5d6573;
+  --accent: #4f46e5;
+  --accent-fg: #ffffff;
+  --accent-soft: #eef0ff;
+  --danger: #c02626;
+  --danger-soft: #fdecec;
+  --warn: #9a5b00;
+  --warn-soft: #fff5e0;
+  --ok: #1a7f45;
+  --ok-soft: #e7f6ee;
+  --focus: #4f46e5;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0f1115;
+  --panel: #161a20;
+  --panel-2: #1d222a;
+  --border: #2a303a;
+  --text: #e8ebf0;
+  --muted: #9aa3b2;
+  --accent: #8b85ff;
+  --accent-fg: #0f1115;
+  --accent-soft: #24234a;
+  --danger: #ff8080;
+  --danger-soft: #3a1b1d;
+  --warn: #f4bf5a;
+  --warn-soft: #362a12;
+  --ok: #5fd38f;
+  --ok-soft: #13301f;
+  --focus: #a5a0ff;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Noto Sans", "Noto Nastaliq Urdu", sans-serif;
+  --font-urdu: "Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Urdu Typesetting", "Segoe UI", serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Urdu/Arabic-script text gets a suitable font and line height when detected via dir=auto */
+textarea[dir="auto"]:dir(rtl),
+.rtl-text:dir(rtl) {
+  font-family: var(--font-urdu);
+  line-height: 2;
+}
+
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+@keyframes indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+.animate-indeterminate {
+  animation: indeterminate 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-indeterminate, .animate-spin, .animate-pulse {
+    animation: none !important;
+  }
+}
