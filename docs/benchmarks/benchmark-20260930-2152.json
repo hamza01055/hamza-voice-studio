@@ -1,0 +1,107 @@
+{
+  "date": "2026-09-30T21:43:12+00:00",
+  "machine": {
+    "os": "Linux 6.18.44-fc-v50",
+    "python": "3.11.15",
+    "cpu": "x86_64",
+    "logical_cpus": 2,
+    "ram_gb": 7.8,
+    "gpu": "none used (CPU runtime)",
+    "threads": 2
+  },
+  "model": "kokoro-multi-lang-v1_0 via sherpa-onnx (fp32, CPU)",
+  "engine": {
+    "cold_load_s": 2.75,
+    "runs": [
+      {
+        "chars": 33,
+        "gen_s": 1.405,
+        "audio_s": 1.946,
+        "rtf": 0.722
+      },
+      {
+        "chars": 33,
+        "gen_s": 1.432,
+        "audio_s": 1.946,
+        "rtf": 0.736
+      },
+      {
+        "chars": 33,
+        "gen_s": 1.459,
+        "audio_s": 1.945,
+        "rtf": 0.75
+      },
+      {
+        "chars": 94,
+        "gen_s": 3.57,
+        "audio_s": 5.154,
+        "rtf": 0.693
+      },
+      {
+        "chars": 94,
+        "gen_s": 3.475,
+        "audio_s": 5.153,
+        "rtf": 0.674
+      },
+      {
+        "chars": 94,
+        "gen_s": 3.201,
+        "audio_s": 5.154,
+        "rtf": 0.621
+      },
+      {
+        "chars": 206,
+        "gen_s": 7.502,
+        "audio_s": 10.457,
+        "rtf": 0.717
+      },
+      {
+        "chars": 206,
+        "gen_s": 7.257,
+        "audio_s": 10.458,
+        "rtf": 0.694
+      },
+      {
+        "chars": 206,
+        "gen_s": 7.098,
+        "audio_s": 10.461,
+        "rtf": 0.678
+      },
+      {
+        "chars": 85,
+        "gen_s": 3.166,
+        "audio_s": 4.486,
+        "rtf": 0.706
+      },
+      {
+        "chars": 85,
+        "gen_s": 3.088,
+        "audio_s": 4.486,
+        "rtf": 0.688
+      },
+      {
+        "chars": 85,
+        "gen_s": 2.883,
+        "audio_s": 4.486,
+        "rtf": 0.643
+      }
+    ],
+    "rtf_median": 0.694,
+    "rtf_max": 0.75,
+    "rss_before_load_mb": 54,
+    "peak_rss_mb": 716
+  },
+  "system": {
+    "jobs": 100,
+    "completed": 100,
+    "failed_or_other": 0,
+    "failures": [],
+    "wall_clock_s": 528.1,
+    "audio_generated_s": 669.8,
+    "rtf_median": 0.746,
+    "rtf_p95": 1.034,
+    "queue_wait_max_s": 523.0,
+    "retries": 0,
+    "worker_peak_rss_mb": 750
+  }
+}

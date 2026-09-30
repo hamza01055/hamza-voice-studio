@@ -1,0 +1,25 @@
+{
+  "description": "Initial evaluation suite. 'language' is the generation language. Urdu script and Roman Urdu are separate categories. Automated metrics cannot judge pronunciation or naturalness; use the generated review sheet for human listening.",
+  "items": [
+    {"id": "short-1", "category": "short", "language": "en-us", "text": "Hello, and welcome."},
+    {"id": "short-2", "category": "short", "language": "en-gb", "text": "Good morning, everyone."},
+    {"id": "long-1", "category": "long_paragraph", "language": "en-us", "text": "Every great story begins with a single decision. For Maya, it was the choice to leave the city before dawn, carrying nothing but a notebook and a borrowed camera. She did not know where the road would lead, only that staying would mean another year of waiting for something that was never going to arrive. By the time the sun rose over the hills, she had already filled three pages with questions."},
+    {"id": "question-1", "category": "question", "language": "en-us", "text": "Have you ever wondered why the sky looks blue during the day but red at sunset?"},
+    {"id": "question-2", "category": "question", "language": "en-us", "text": "Is it ready? Are you sure?"},
+    {"id": "numbers-1", "category": "numbers", "language": "en-us", "text": "The warehouse holds 12,450 boxes, and 3.5 percent of them arrived damaged."},
+    {"id": "dates-1", "category": "dates", "language": "en-us", "text": "The course starts on 2026-10-15 and ends on March 3, 2027."},
+    {"id": "currency-1", "category": "currency", "language": "en-us", "text": "The ticket costs $49.99, or £40, or Rs. 13,500."},
+    {"id": "abbrev-1", "category": "abbreviations", "language": "en-us", "text": "Dr. Ahmed and Mr. Lee met at 10:30, i.e. before lunch, to discuss the budget vs. the plan."},
+    {"id": "names-1", "category": "names", "language": "en-us", "text": "Hamza, Siobhan, Nguyen, and Xavier presented their findings in Karachi and Reykjavik."},
+    {"id": "mixed-roman-urdu-1", "category": "mixed_roman_urdu", "language": "en-us", "text": "AI ki training 15 October ko hai, fee Rs. 2,500 hai."},
+    {"id": "mixed-roman-urdu-2", "category": "mixed_roman_urdu", "language": "en-us", "text": "Meeting kal subah 9:00 baje hai, please time par aana."},
+    {"id": "punct-1", "category": "punctuation", "language": "en-us", "text": "Wait... what? No -- absolutely not! (Well, maybe; we'll see.)"},
+    {"id": "url-1", "category": "urls", "language": "en-us", "text": "Read more at https://example.com/guide or email support@example.org."},
+    {"id": "urdu-script-1", "category": "urdu_script", "language": "ur", "unevaluated": true, "text": "آپ کیسے ہیں؟ آج موسم بہت اچھا ہے۔"},
+    {"id": "urdu-mixed-1", "category": "urdu_script_mixed", "language": "ur", "unevaluated": true, "text": "کل ہماری AI training ہے، براہ کرم وقت پر آئیں۔"},
+    {"id": "hindi-1", "category": "hindi", "language": "hi", "text": "नमस्ते, आज का मौसम बहुत अच्छा है।"},
+    {"id": "spanish-1", "category": "spanish", "language": "es", "text": "Hola, ¿cómo estás? Hoy hace un día precioso."},
+    {"id": "edge-single-word", "category": "edge", "language": "en-us", "text": "Yes."},
+    {"id": "edge-repeated", "category": "edge", "language": "en-us", "text": "Go, go, go, go, go!"}
+  ]
+}

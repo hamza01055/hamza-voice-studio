@@ -1,0 +1,64 @@
+{
+  "name": "hamza-voice-studio-desktop",
+  "productName": "Hamza Voice Studio",
+  "version": "0.1.0",
+  "description": "Local-first AI voice production studio",
+  "main": "main.js",
+  "private": true,
+  "author": "Hamza",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --no-sandbox",
+    "dist:win": "electron-builder --win nsis",
+    "dist:dir": "electron-builder --dir"
+  },
+  "build": {
+    "appId": "local.hamzavoicestudio",
+    "productName": "Hamza Voice Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/app",
+        "to": "backend/app",
+        "filter": [
+          "**/*",
+          "!**/__pycache__/**"
+        ]
+      },
+      {
+        "from": "../backend/pyproject.toml",
+        "to": "backend/pyproject.toml"
+      },
+      {
+        "from": "../frontend/dist",
+        "to": "frontend/dist"
+      },
+      {
+        "from": "build/python",
+        "to": "python"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    }
+  },
+  "devDependencies": {
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3"
+  }
+}

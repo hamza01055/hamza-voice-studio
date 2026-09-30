@@ -319,6 +319,7 @@ function Studio({ project }: { project: Project }) {
                   maxChars={maxChars}
                   voiceLabel={voiceLabel(s)}
                   takeVariation={caps?.take_variation ?? "unknown"}
+                  language={s.language ?? project.default_language}
                 />
               ))
             )}

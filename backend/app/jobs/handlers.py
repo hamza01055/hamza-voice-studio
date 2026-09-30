@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import time
 from pathlib import Path
 from typing import Any
@@ -196,6 +197,26 @@ def unique_path(directory: Path, file_name: str) -> Path:
     return p
 
 
+def place_without_overwrite(src: Path, directory: Path, file_name: str) -> Path:
+    """Move ``src`` into ``directory`` under a name that does not exist yet. Uses
+    exclusive creation so a file that appears concurrently is never overwritten."""
+    for _ in range(50):
+        final = unique_path(directory, file_name)
+        try:
+            os.link(src, final)  # atomic, fails if the name exists
+        except FileExistsError:
+            continue
+        except OSError:
+            try:
+                with final.open("xb") as out, src.open("rb") as inp:
+                    shutil.copyfileobj(inp, out)
+            except FileExistsError:
+                continue
+        src.unlink(missing_ok=True)
+        return final
+    raise JobFailed("Could not find a free file name for the export.", code="export_name_conflict")
+
+
 def handle_export(ctx: JobContext, _engines: EngineManager) -> dict[str, Any]:
     p = ctx.params
     settings = get_settings()
@@ -280,10 +301,7 @@ def handle_export(ctx: JobContext, _engines: EngineManager) -> dict[str, Any]:
             raise JobFailed("The exported file's duration did not match the assembled audio; "
                             "the export was discarded.", code="invalid_export")
         settings.exports_dir.mkdir(parents=True, exist_ok=True)
-        final = unique_path(settings.exports_dir, safe_file_name(p["file_name"], fmt))
-        # Never overwrite: link fails if the target appeared meanwhile.
-        os.link(out_tmp, final) if hasattr(os, "link") else os.replace(out_tmp, final)
-        out_tmp.unlink(missing_ok=True)
+        final = place_without_overwrite(out_tmp, settings.exports_dir, safe_file_name(p["file_name"], fmt))
         with session_factory()() as db:
             export = db.get(Export, p["export_id"])
             if export is None:

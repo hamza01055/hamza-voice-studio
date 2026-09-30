@@ -70,3 +70,16 @@ def test_validation_errors_do_not_echo_input(client: TestClient):
 def test_model_id_traversal(client: TestClient):
     assert client.post("/api/models/..%2F..%2Fetc/download").status_code in (404, 405, 422)
     assert client.post("/api/models/..%2Fsecret/download").status_code in (404, 405, 422)
+
+
+def test_place_without_overwrite(tmp_path):
+    from app.jobs.handlers import place_without_overwrite
+
+    d = tmp_path / "out"
+    d.mkdir()
+    (d / "x.wav").write_text("original")
+    src = tmp_path / "new.wav"
+    src.write_text("new")
+    final = place_without_overwrite(src, d, "x.wav")
+    assert final.name == "x (1).wav" and final.read_text() == "new"
+    assert (d / "x.wav").read_text() == "original" and not src.exists()

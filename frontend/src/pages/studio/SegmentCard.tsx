@@ -20,7 +20,7 @@ import { usePlayer } from "../../components/Player";
 import { Badge, Button, IconButton, Notice, Progress, useToast } from "../../components/ui";
 import { api, errorMessage } from "../../lib/api";
 import { isActive, useLiveJob } from "../../lib/events";
-import { fmtDuration, JOB_STATUS_LABEL, wordCount } from "../../lib/format";
+import { fmtDuration, hasRtl, JOB_STATUS_LABEL, wordCount } from "../../lib/format";
 import { patchSegmentInCache, qk } from "../../lib/queries";
 import type { Segment } from "../../lib/types";
 import { useGenerate, useSegmentEditor } from "./hooks";
@@ -37,6 +37,7 @@ export function SegmentCard({
   maxChars,
   voiceLabel,
   takeVariation,
+  language,
 }: {
   seg: Segment;
   index: number;
@@ -48,6 +49,7 @@ export function SegmentCard({
   maxChars: number;
   voiceLabel: string;
   takeVariation: string;
+  language: string;
 }) {
   const ed = useSegmentEditor(seg);
   const qc = useQueryClient();
@@ -214,6 +216,12 @@ export function SegmentCard({
           className="w-full resize-y rounded-lg border border-transparent bg-transparent px-1 py-1 text-[15px] leading-relaxed focus:border-line focus:bg-panel-2/40 focus:outline-none"
         />
         {ed.error && <p className="text-xs text-danger">Not saved: {ed.error}</p>}
+        {hasRtl(ed.text) && language.startsWith("en") && (
+          <Notice tone="warn" className="mt-1">
+            This segment contains Urdu/Arabic-script text but its language is English, so those words will be
+            mispronounced or skipped. The installed model has no evaluated Urdu voice (see Models).
+          </Notice>
+        )}
       </div>
 
       {running && (

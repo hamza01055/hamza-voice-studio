@@ -147,3 +147,31 @@ test("full workflow: create, generate (real), preview, regenerate, select take, 
     await b.stop();
   }
 });
+
+test("voice library: upload with consent, validation, delete", async ({ page }, testInfo) => {
+  const b = new Backend(18767);
+  await b.start();
+  try {
+    // 4 s synthetic test tone (not a person's voice) generated with ffmpeg
+    const wav = testInfo.outputPath("ref.wav");
+    execFileSync("ffmpeg", ["-v", "error", "-y", "-f", "lavfi", "-i", "sine=frequency=220:duration=4", "-af", "volume=0.4", wav]);
+    await open(page, b, "#/voices");
+    await expect(page.getByText("No voice-cloning engine is installed")).toBeVisible();
+    await page.getByRole("button", { name: "Add voice" }).first().click();
+    const dlg = page.getByRole("dialog", { name: "Add a voice" });
+    await dlg.locator('input[type="file"]').setInputFiles(wav);
+    await dlg.getByLabel("Name").fill("Test tone");
+    const save = dlg.getByRole("button", { name: "Save voice" });
+    await expect(save).toBeDisabled(); // consent not given yet
+    await dlg.getByLabel("This is my own voice").check();
+    await dlg.getByRole("checkbox").check();
+    await save.click();
+    await expect(page.getByRole("heading", { name: "Test tone" })).toBeVisible();
+    await expect(page.getByText("No compatible engine installed")).toBeVisible();
+    await page.getByRole("button", { name: "Delete Test tone" }).click();
+    await page.getByRole("button", { name: "Delete voice" }).click();
+    await expect(page.getByText("No voices yet")).toBeVisible();
+  } finally {
+    await b.stop();
+  }
+});
