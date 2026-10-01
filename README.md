@@ -4,6 +4,7 @@ A local-first AI voice-production studio: write and organise scripts, generate s
 a locally installed model, compare takes per segment, regenerate individual segments,
 assemble long-form narration and export WAV/MP3 — all on your own computer.
 
+
 "Hamza Voice Studio" is a working name; branding lives in `backend/app/branding.py`,
 `frontend/src/branding.ts` and `desktop/package.json`.
 
