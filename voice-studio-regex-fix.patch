@@ -1,0 +1,82 @@
+diff --git a/backend/app/services/segmentation.py b/backend/app/services/segmentation.py
+index 3a141fa..4ccdc28 100644
+--- a/backend/app/services/segmentation.py
++++ b/backend/app/services/segmentation.py
+@@ -48,8 +48,18 @@ def split_sentences(text: str) -> list[str]:
+ 
+ 
+ def _is_boundary(text: str, start: int, dot: int) -> bool:
+-    word = re.findall(r"[\w.]+$", text[start:dot])
+-    w = word[0].lower() if word else ""
++    # Scan the trailing token directly: an unanchored regex can retry long
++    # partial matches at every position when user input ends in punctuation.
++    end = dot
++    if end > start and text[end - 1] == "\n":  # preserve regex $ semantics
++        end -= 1
++    token_start = end
++    while token_start > start:
++        ch = text[token_start - 1]
++        if not (ch.isalnum() or ch in "_."):
++            break
++        token_start -= 1
++    w = text[token_start:end].lower()
+     if w in ABBREV:
+         return False
+     if len(w) == 1 and w.isalpha():  # initials: "J. Smith"
+diff --git a/backend/tests/unit/test_text.py b/backend/tests/unit/test_text.py
+index c7dee1b..08fd6c5 100644
+--- a/backend/tests/unit/test_text.py
++++ b/backend/tests/unit/test_text.py
+@@ -3,7 +3,7 @@ import pytest
+ from app.services import numbers as num
+ from app.services.normalize import detect_scripts, normalize
+ from app.services.roman_urdu import transliterate
+-from app.services.segmentation import segment, split_long, split_sentences
++from app.services.segmentation import _is_boundary, segment, split_long, split_sentences
+ from app.services.subtitles import to_srt, to_vtt
+ 
+ 
+@@ -92,6 +92,43 @@ def test_sentence_split_abbrev_decimals_urdu():
+     assert s == ['Dr. Smith paid 3.5 kg.', 'He said: "Hi!"', 'Then left.', 'یہ جملہ ہے۔', 'کیا یہ ہے؟', 'OK']
+ 
+ 
++@pytest.mark.parametrize("text,expected", [
++    ("Dr. Ali left. Next.", ["Dr. Ali left.", "Next."]),
++    ("Use e.g. apples. Next.", ["Use e.g. apples.", "Next."]),
++    ("J. Smith left. Next.", ["J. Smith left.", "Next."]),
++    ("É. Ali left. Next.", ["É. Ali left.", "Next."]),
++    ("ع. Ali left. Next.", ["ع. Ali left.", "Next."]),
++    ("_dr. Next.", ["_dr.", "Next."]),
++    ("Hello/. Next.", ["Hello/.", "Next."]),
++    ("Hello🙂. Next.", ["Hello🙂.", "Next."]),
++])
++def test_sentence_split_token_boundaries(text, expected):
++    assert split_sentences(text) == expected
++
++
++@pytest.mark.parametrize("prefix,start,expected", [
++    ("Dr", 0, False),
++    ("Dr\n", 0, False),
++    ("Dr\n\n", 0, True),
++    ("", 0, True),
++    ("prefixMr", 6, False),
++    ("Dr", 1, False),
++    ("Dr", 2, True),
++    ("foo_dr", 0, True),
++    ("U.S", 0, False),
++    ("3.5", 0, True),
++])
++def test_boundary_preserves_abbreviations_unicode_and_start(prefix, start, expected):
++    assert _is_boundary(prefix + ".", start, len(prefix)) is expected
++
++
++@pytest.mark.parametrize("token", ["a", ".", "ع"])
++def test_sentence_split_long_token_ending_in_non_word_character(token):
++    # Failed suffix matches previously retried the entire token at every offset.
++    first = token * 20_000 + "/."
++    assert split_sentences(first + " Next.") == [first, "Next."]
++
++
+ def test_segment_modes_preserve_order_and_text():
+     text = "Para one. Still one.\n\nPara two!\n\n\n  Para three?  "
+     assert segment(text, "paragraph") == ["Para one. Still one.", "Para two!", "Para three?"]
