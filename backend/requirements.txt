@@ -1,13 +1,13 @@
 # Pinned, verified versions (Python 3.11). Install: pip install -r backend/requirements.txt
-sherpa-onnx==1.13.8
-sherpa-onnx-core==1.13.8
-fastapi==0.142.2
-starlette==1.7.0
+sherpa-onnx==2.0.1
+sherpa-onnx-core==2.0.1
+fastapi==0.162.0
+starlette==1.10.0
 uvicorn[standard]==0.54.0
-pydantic==2.13.5
-pydantic-settings==2.15.0
-SQLAlchemy==2.1.1
-alembic==1.20.0
+pydantic==2.14.2
+pydantic-settings==2.16.2
+SQLAlchemy==2.1.6
+alembic==1.20.1
 python-multipart==0.0.32
 numpy==2.4.6
 soundfile==0.14.0
